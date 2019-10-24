@@ -30,7 +30,9 @@
     "classnames": "2.2.6",
     "connected-react-router": "6.4.0",
     "core-js": "3.0.1",
+    "grommet": "2.7.11",
     "history": "4.9.0",
+    "polished": "3.4.1",
     "prop-types": "15.7.2",
     "react": "16.8.6",
     "react-dom": "16.8.6",
@@ -40,6 +42,7 @@
     "redux": "4.0.1",
     "redux-promise-middleware": "6.1.0",
     "redux-thunk": "2.3.0",
-    "regenerator-runtime": "0.13.2"
+    "regenerator-runtime": "0.13.2",
+    "styled-components": "4.4.0"
   }
 }
