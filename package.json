@@ -32,6 +32,7 @@
     "core-js": "3.0.1",
     "formik": "2.0.3",
     "grommet": "2.7.11",
+    "grommet-icons": "4.3.0",
     "history": "4.9.0",
     "polished": "3.4.1",
     "prop-types": "15.7.2",

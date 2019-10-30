@@ -5,6 +5,7 @@ import TextButton from 'common/TextButton';
 import SpotItem from 'spot/SpotItem';
 import { Box, Layer, Text } from 'grommet';
 import DetailsCard from '../../spot/DetailsCard';
+import { Close as CloseIcon } from 'grommet-icons';
 
 export default class SpotList extends PureComponent {
     static propTypes = {
@@ -30,7 +31,8 @@ export default class SpotList extends PureComponent {
 
     _onOpenModal = () => {
         this.setState({
-            isDetailsModalOpen: true
+            isDetailsModalOpen: true,
+
         });
     };
 
@@ -65,10 +67,10 @@ export default class SpotList extends PureComponent {
                                     <Layer
                                         key={`layer-${spot.id}`}
                                         position="center"
-                                        plain
                                         modal
+                                        plain
                                     >
-                                        <DetailsCard spot={spot} />
+                                        <DetailsCard spot={selectedSpot} />
                                     </Layer>
                                 }
                             </>

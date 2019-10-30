@@ -8,14 +8,20 @@ const DetailsCard = ({ spot }) => {
   const [isCheckoutModalOpen, openCheckoutModal] = useState(false);
 
   return (
-    <Box>
-      <Text>{spot.title}</Text>
-      <Text>{spot.description}</Text>
-      <Button
-        onClick={() => openCheckoutModal(true)}
-        label={`$${spot.price / 100} | Book it!`}
-      />
-
+    <>
+      <Box background="white" pad="medium" fill>
+        <Text weight="bold" textAlign="center" size="large">Spot Details</Text>
+        <Text margin={{bottom: 'small'}} weight="bold" textAlign="left" size="large">{spot.title}</Text>
+        <Text margin={{bottom: 'small'}}>{spot.description}</Text>
+        {/* TO-DO: implement TextButton component to take advantage of loading indicator */}
+        <Button
+          alignSelf="center"
+          primary
+          color="blue"
+          onClick={() => openCheckoutModal(true)}
+          label={<Text color="white">{`$${spot.price / 100} | Book it!`}</Text>}
+        />
+      </Box>
       {
         isCheckoutModalOpen &&
         <Layer>
@@ -27,7 +33,7 @@ const DetailsCard = ({ spot }) => {
           />
         </Layer>
       }
-    </Box>
+    </>
   );
 };
 
