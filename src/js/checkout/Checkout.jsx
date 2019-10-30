@@ -1,50 +1,34 @@
 /* eslint-disable react/jsx-no-bind */
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Button, TextInput, Text, MaskedInput } from 'grommet';
 import TextButton from 'common/TextButton';
 import SpotItem from 'spot/SpotItem';
-import useForm from 'react-hook-form';
 import * as yup from 'yup';
+import { Form, withFormik } from 'formik';
 
 const validationSchema = yup.object().shape({
-    email: yup.string().email(),
-    phone: yup.string().matches(/^\+?[0-9]{10,11}$/),
+    firstName: yup.string().min(1),
+    lastName: yup.string().min(1),
+    email: yup.string().email('Please enter a valid email')
+        .required('Please enter a valid email'),
+    phone: yup.string().matches(/^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$/, 'Please enter a valid phone number')
+        .required('Please enter a valid phone number'),
 });
 
-const Checkout = ({
+const CheckoutForm = ({
     spot,
     onHeaderTextClick,
-    headerText
+    headerText,
+    errors,
+    values,
+    handleChange,
+    setFieldValue,
+    isSubmitting
 }) => {
-    const { handleSubmit, register, errors, getValues, setValue, setError, formState } = useForm({
-        validationSchema,
-    });
-    const formValues = getValues();
-    // register 3rd party inputs
-    useEffect(() => {
-        register({ name: 'firstName' });
-        register({ name: 'lastName' });
-        register({ name: 'email' });
-        register({ name: 'phone' });
-    }, [register]);
-
-    const { isSubmitting } = formState;
-
-    const handleOnSubmit = async values => {
-        await validationSchema.validate(values).catch(err => {
-            err.errors.forEach(error => {
-                setError({
-                    name: error.values[0],
-                    message: error.key,
-                    type: 'warning'
-                });
-            }); // => [{ key: 'field_too_short', values: { min: 18 } }]
-        });
-    };
 
     return (
-        <Box onSubmit={handleSubmit(handleOnSubmit)}>
+        <Form>
             <Box
                 background="#0082ff"
                 align="start"
@@ -70,54 +54,49 @@ const Checkout = ({
                         pad={{ vertical: 'xsmall' }}
                         flex="grow"
                     >
-
+                        <Text color={(errors.firstName) ? 'red' : 'grey'}>First Name</Text>
                         <TextInput
                             name="firstName"
-                            borderColor="transparent"
+                            borderColor={(errors.firstName) ? 'red' : 'transparent'}
                             pad="0"
-                            value={formValues.firstName}
-                            onChange={newValue => {
-                                setValue('firstName', newValue);
-                            }}
+                            value={values.firstName}
+                            onChange={handleChange}
                         />
-                        {errors.firstName && <Text color="red">{errors.firstName.message}</Text>}
+                        <Text color="red">{errors.firstName}</Text>
                     </Box>
                     <Box
                         pad={{ vertical: 'xsmall' }}
                         flex="grow"
                     >
-
+                        <Text color={(errors.lastName) ? 'red' : 'grey'}>Last Name</Text>
                         <TextInput
                             name="lastName"
-                            borderColor="transparent"
+                            borderColor={(errors.lastName) ? 'red' : 'transparent'}
                             pad="0"
-                            value={formValues.lastName}
-                            onChange={newValue => {
-                                setValue('lastName', newValue);
-                            }}
+                            value={values.lastName}
+                            onChange={handleChange}
                         />
-                        {errors.lastName && <Text color="red">{errors.lastName.message}</Text>}
+                        <Text color="red">{errors.lastName}</Text>
                     </Box>
                     <Box
                         pad={{ vertical: 'xsmall' }}
                         flex="grow"
                     >
-
+                        <Text color={(errors.email) ? 'red' : 'grey'}>Email</Text>
                         <TextInput
                             name="email"
-                            borderColor="transparent"
+                            borderColor={(errors.email) ? 'red' : 'transparent'}
                             pad="0"
-                            value={formValues.email}
-                            onChange={newValue => {
-                                setValue('email', newValue);
-                            }}
+                            value={values.email}
+                            onChange={handleChange}
                         />
-                        {errors.email && <Text color="red">{errors.email.message}</Text>}
+                        <Text color="red">{errors.email}</Text>
                     </Box>
                     <Box
                         pad={{ vertical: 'xsmall' }}
                         flex="grow"
                     >
+                        <Text color={(errors.phone) ? 'red' : 'grey'}>Phone Number</Text>
                         <MaskedInput
                             mask={[
                                 { fixed: '(' },
@@ -140,30 +119,61 @@ const Checkout = ({
                                     placeholder: 'xxxx',
                                 },
                             ]}
-                            value={formValues.phone}
+                            value={values.phone}
                             onChange={event => {
-                                setValue('phone', event.target.value);
+                                setFieldValue('phone', event.target.value);
                             }}
                             name="phone"
+                            borderColor={(errors.phone) ? 'red' : 'transparent'}
                         />
-                        {errors.phone && <Text color="red">{errors.phone.message}</Text>}
+                        <Text color="red">{errors.phone}</Text>
                     </Box>
                     <Button
                         disabled={isSubmitting}
                         type="submit"
-                    >
-                        {(isSubmitting) ? 'Submitting' : `Purchase for ${spot.price}`}
-                    </Button>
+                        label={(isSubmitting) ? 'Submitting' : `Purchase for ${spot.price}`}
+                    />
                 </Box>
             </Box>
-        </Box>
+        </Form>
     );
 };
 
-Checkout.propTypes = {
+CheckoutForm.propTypes = {
     spot: PropTypes.object.isRequired,
     onHeaderTextClick: PropTypes.func.isRequired,
     headerText: PropTypes.string,
+    errors: PropTypes.object,
+    values: PropTypes.object,
+    handleChange: PropTypes.func,
+    setFieldValue: PropTypes.func,
+    isSubmitting: PropTypes.bool,
 };
+
+const Checkout = withFormik({
+    mapPropsToValues: () => ({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+    }),
+    handleSubmit: async (values, { props, setSubmitting }) => {
+        try {
+            await props.onSubmit({
+                firstName: values.firstName,
+                lastName: values.lastName,
+                email: values.email,
+                phone: values.phone,
+            });
+        } catch (e) {
+            // defer to mutation component error
+        } finally {
+            setSubmitting(false);
+        }
+    },
+    validationSchema,
+    validateOnChange: true,
+    enableReinitialize: true,
+})(CheckoutForm);
 
 export default Checkout;
