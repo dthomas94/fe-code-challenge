@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import TextButton from 'common/TextButton';
 import SpotItem from 'spot/SpotItem';
 import { Box, Layer, Text } from 'grommet';
-import Checkout from '../../checkout/Checkout';
+import DetailsCard from '../../spot/DetailsCard';
 
 export default class SpotList extends PureComponent {
     static propTypes = {
@@ -68,11 +68,7 @@ export default class SpotList extends PureComponent {
                                         plain
                                         modal
                                     >
-                                        <Checkout
-                                            spot={spot}
-                                            onHeaderTextClick={this._onCloseModal}
-                                            headerText="&lt; Back to Search"
-                                        />
+                                        <DetailsCard spot={spot} />
                                     </Layer>
                                 }
                             </>

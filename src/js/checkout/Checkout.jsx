@@ -131,7 +131,7 @@ const CheckoutForm = ({
                     <Button
                         disabled={isSubmitting}
                         type="submit"
-                        label={(isSubmitting) ? 'Submitting' : `Purchase for ${spot.price}`}
+                        label={(isSubmitting) ? 'Submitting' : `Purchase for ${spot.price / 100}`}
                     />
                 </Box>
             </Box>
