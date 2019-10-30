@@ -4,21 +4,24 @@ import PropTypes from 'prop-types';
 import { Box, Button, Layer, Text } from 'grommet';
 import Checkout from '../checkout/Checkout';
 
-const DetailsCard = ({ spot }) => {
+const DetailsCard = ({ onCloseDetailsModal, spot }) => {
   const [isCheckoutModalOpen, openCheckoutModal] = useState(false);
 
   return (
     <>
       <Box background="white" pad="medium" fill>
         <Text weight="bold" textAlign="center" size="large">Spot Details</Text>
-        <Text margin={{bottom: 'small'}} weight="bold" textAlign="left" size="large">{spot.title}</Text>
-        <Text margin={{bottom: 'small'}}>{spot.description}</Text>
+        <Text margin={{ bottom: 'small' }} weight="bold" textAlign="left" size="large">{spot.title}</Text>
+        <Text margin={{ bottom: 'small' }}>{spot.description}</Text>
         {/* TO-DO: implement TextButton component to take advantage of loading indicator */}
         <Button
           alignSelf="center"
           primary
           color="blue"
-          onClick={() => openCheckoutModal(true)}
+          onClick={() => {
+            openCheckoutModal(true);
+
+          }}
           label={<Text color="white">{`$${spot.price / 100} | Book it!`}</Text>}
         />
       </Box>
@@ -28,7 +31,8 @@ const DetailsCard = ({ spot }) => {
 
           <Checkout
             spot={spot}
-            onHeaderTextClick={this._onCloseModal}
+            openCheckoutModal={openCheckoutModal}
+            onCloseDetailsModal={onCloseDetailsModal}
             headerText="&lt; Back to Search"
           />
         </Layer>
@@ -39,6 +43,7 @@ const DetailsCard = ({ spot }) => {
 
 DetailsCard.propTypes = {
   spot: PropTypes.object.isRequired,
+  onCloseDetailsModal: PropTypes.func.isRequired
 };
 
 export default DetailsCard;

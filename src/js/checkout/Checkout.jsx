@@ -6,6 +6,7 @@ import TextButton from 'common/TextButton';
 import SpotItem from 'spot/SpotItem';
 import * as yup from 'yup';
 import { Form, withFormik } from 'formik';
+import axios from 'axios';
 
 const validationSchema = yup.object().shape({
     firstName: yup.string().min(1),
@@ -24,7 +25,8 @@ const CheckoutForm = ({
     values,
     handleChange,
     setFieldValue,
-    isSubmitting
+    isSubmitting,
+    openCheckoutModal
 }) => {
 
     return (
@@ -141,13 +143,14 @@ const CheckoutForm = ({
 
 CheckoutForm.propTypes = {
     spot: PropTypes.object.isRequired,
-    onHeaderTextClick: PropTypes.func.isRequired,
+    openCheckoutModal: PropTypes.func.isRequired,
     headerText: PropTypes.string,
     errors: PropTypes.object,
     values: PropTypes.object,
     handleChange: PropTypes.func,
     setFieldValue: PropTypes.func,
     isSubmitting: PropTypes.bool,
+    onCloseDetailsModal: PropTypes.func,
 };
 
 const Checkout = withFormik({
@@ -158,18 +161,23 @@ const Checkout = withFormik({
         phone: '',
     }),
     handleSubmit: async (values, { props, setSubmitting }) => {
-        try {
-            await props.onSubmit({
-                firstName: values.firstName,
-                lastName: values.lastName,
-                email: values.email,
-                phone: values.phone,
+
+        await axios.post('/reservations', {
+            spotId: props.spot.id,
+            firstName: values.firstName,
+            lastName: values.lastName,
+            email: values.email,
+            phone: values.phone
+        })
+            .then(response => {
+                setSubmitting(false);
+                props.onCloseDetailsModal();
+                props.openCheckoutModal(false);
+            })
+            .catch(err => {
+                setSubmitting(false);
+                throw new Error(err);
             });
-        } catch (e) {
-            // defer to mutation component error
-        } finally {
-            setSubmitting(false);
-        }
     },
     validationSchema,
     validateOnChange: true,

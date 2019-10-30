@@ -81,5 +81,38 @@
       "image": "https://res.cloudinary.com/spothero/image/upload/c_fill,f_auto,g_xy_center,h_98,q_50,w_145,x_2880,y_1920/v1446132663/sd29xbvmbl52loakpumb.jpg"
     }
   ],
-  "reservations": []
+  "reservations": [
+    {
+      "spotId": 1,
+      "firstName": "Danielle",
+      "lastName": "Thomas",
+      "email": "danielle.thomas313@gmail.com",
+      "phone": "(773) 255-1966",
+      "id": 1
+    },
+    {
+      "spotId": 1,
+      "firstName": "Danielle",
+      "lastName": "Thomas",
+      "email": "danielle.thomas313@gmail.com",
+      "phone": "(773) 255-1966",
+      "id": 2
+    },
+    {
+      "spotId": 1,
+      "firstName": "Danielle",
+      "lastName": "Thomas",
+      "email": "danielle.thomas313@gmail.com",
+      "phone": "(773) 255-1966",
+      "id": 3
+    },
+    {
+      "spotId": 1,
+      "firstName": "Danielle",
+      "lastName": "Thomas",
+      "email": "danielle.thomas313@gmail.com",
+      "phone": "(773) 255-1966",
+      "id": 4
+    }
+  ]
 }
